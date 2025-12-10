@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ classroom['subject'] }}</title>
+    <style>
+        body { font-family: sans-serif; max-width: 700px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; }
+        .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .back-link { text-decoration: none; color: #666; }
+        
+        .input-box { background: white; padding: 20px; border-radius: 10px; display: flex; gap: 10px; margin-bottom: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        input { flex-grow: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        button { padding: 10px 25px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+
+        .q-card { background: white; margin-bottom: 15px; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .vote-count { font-size: 1.5em; font-weight: bold; color: #007bff; margin-right: 15px;}
+        
+        /* Active Vote Button */
+        .upvote-btn { text-decoration: none; background-color: #e7f1ff; color: #007bff; padding: 8px 12px; border-radius: 20px; font-size: 0.9em; }
+        .upvote-btn:hover { background-color: #007bff; color: white; }
+        
+        /* Disabled Vote Button */
+        .voted-btn { background-color: #eee; color: #999; padding: 8px 12px; border-radius: 20px; font-size: 0.9em; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <a href="{{ '/admin' if session['role'] == 'admin' else '/teacher' if session['role'] == 'teacher' else '/dashboard' }}" class="back-link">← Back</a>
+            <h1>{{ classroom['subject'] }}</h1>
+        </div>
+    </div>
+
+    <div class="input-box">
+        <form action="/ask/{{ classroom['id'] }}" method="POST" style="display:flex; width:100%; gap:10px;">
+            <input type="text" name="question_text" placeholder="Type your question..." required autocomplete="off">
+            <button type="submit">Ask</button>
+        </form>
+    </div>
+
+    <div>
+        {% for q in questions %}
+            <div class="q-card">
+                <div class="q-text">{{ q['text'] }}</div>
+                <div style="display: flex; align-items: center;">
+                    <span class="vote-count">{{ q['votes'] }}</span>
+                    
+                    {% if q['has_voted'] == 1 %}
+                        <span class="voted-btn">✓ Voted</span>
+                    {% else %}
+                        <a href="/upvote/{{ classroom['id'] }}/{{ q['id'] }}" class="upvote-btn">▲ Upvote</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

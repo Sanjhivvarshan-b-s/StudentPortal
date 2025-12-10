@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <style>
+        body { font-family: sans-serif; max-width: 1000px; margin: auto; padding: 20px; background: #2c3e50; color: white; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: white; color: black; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
+        h2 { margin-top: 0; color: #2c3e50; font-size: 1.2em;}
+        select, input { padding: 8px; margin: 5px 0; width: 100%; box-sizing: border-box;}
+        button { background: #27ae60; color: white; border: none; cursor: pointer; font-weight: bold; padding: 10px; width: 100%; }
+        button:hover { background: #219150; }
+        
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border-bottom: 1px solid #ddd; padding: 10px; text-align: left; font-size: 0.9em; }
+        th { background: #f8f9fa; }
+        
+        /* Buttons */
+        .btn { padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 0.8em; color: white; display: inline-block; }
+        .btn-view { background: #3498db; }
+        .btn-del { background: #e74c3c; margin-left: 5px; }
+        .btn-del:hover { background: #c0392b; }
+    </style>
+</head>
+<body>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h1>🛠️ Admin Control Panel</h1>
+        <a href="/logout" style="color: #ecf0f1;">Logout</a>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>👤 Create Student</h2>
+            <form action="/add_student" method="POST">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit">Create</button>
+            </form>
+        </div>
+        <div class="card">
+            <h2>👩‍🏫 Create Teacher</h2>
+            <form action="/add_teacher" method="POST">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" style="background:#9b59b6;">Create</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📘 Create Course</h2>
+        <form action="/add_course" method="POST">
+            <input type="text" name="subject" placeholder="Subject Name" required>
+            <select name="teacher_username" required>
+                <option value="">Assign Teacher</option>
+                {% for t in teachers %}
+                    <option value="{{ t['username'] }}">{{ t['username'] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" style="background:#2980b9;">Create</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>🎓 Enroll Student</h2>
+        <form action="/enroll_student" method="POST" style="display: flex; gap: 10px;">
+            <select name="student_id">
+                {% for s in students %}
+                    <option value="{{ s['id'] }}">{{ s['username'] }}</option>
+                {% endfor %}
+            </select>
+            <select name="class_id">
+                {% for c in classes %}
+                    <option value="{{ c['id'] }}">{{ c['subject'] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" style="width: auto;">Enroll</button>
+        </form>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h2>Manage Courses</h2>
+            <table>
+                <tr>
+                    <th>Subject</th>
+                    <th>Actions</th>
+                </tr>
+                {% for c in classes %}
+                <tr>
+                    <td>{{ c['subject'] }} <br><small style="color:#777">{{ c['teacher'] }}</small></td>
+                    <td>
+                        <a href="/class/{{ c['id'] }}" class="btn btn-view">View</a>
+                        <a href="/delete_course/{{ c['id'] }}" class="btn btn-del" onclick="return confirm('Are you sure? This will delete all questions in this class.')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Manage Students</h2>
+            <table>
+                <tr>
+                    <th>Username</th>
+                    <th>Actions</th>
+                </tr>
+                {% for s in students %}
+                <tr>
+                    <td>{{ s['username'] }}</td>
+                    <td>
+                        <a href="/delete_student/{{ s['id'] }}" class="btn btn-del" onclick="return confirm('Delete this student?')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>All Questions</h2>
+        <table>
+            <tr>
+                <th>Class</th>
+                <th>Question</th>
+                <th>Votes</th>
+            </tr>
+            {% for q in questions %}
+            <tr>
+                <td>{{ q['class_subject'] }}</td>
+                <td>{{ q['text'] }}</td>
+                <td>{{ q['votes'] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3" style="text-align:center; color:#777;">No questions yet.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</body>
+</html>

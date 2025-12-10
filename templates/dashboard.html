@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Dashboard</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 20px; background-color: #f9f9f9; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .class-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; border-top: 5px solid #007bff; text-decoration: none; color: inherit; display: block; }
+        .class-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📚 My Enrolled Classes</h1>
+        <a href="/logout" style="color: red; text-decoration: none;">Logout</a>
+    </header>
+
+    <div class="grid-container">
+        {% for c in classes %}
+            <a href="/class/{{ c['id'] }}" class="class-card">
+                <h2>{{ c['subject'] }}</h2>
+                <p>👨‍🏫 {{ c['teacher'] }}</p>
+                <p style="font-size: 0.8em; color: #aaa;">Click to enter</p>
+            </a>
+        {% else %}
+            <div style="grid-column: 1 / -1; text-align: center; color: #777;">
+                <h3>You are not enrolled in any classes yet.</h3>
+                <p>Ask your Admin to add you!</p>
+            </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Database
+school.db
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+env/
+
+# VS Code workspace settings
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db

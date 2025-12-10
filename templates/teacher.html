@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teacher Dashboard</title>
+    <style>
+        body { font-family: sans-serif; max-width: 900px; margin: auto; padding: 20px; background: #f6f8fb; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+        .card { background: white; padding: 18px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .class-link { text-decoration: none; color: #333; display: block; }
+        .class-link:hover { color: #007bff; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border-bottom: 1px solid #eee; padding: 8px; text-align: left; font-size: 0.9em; }
+        th { background: #f2f4f7; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>👩‍🏫 My Classes</h1>
+        <a href="/logout" style="color: #e74c3c; text-decoration:none;">Logout</a>
+    </header>
+
+    <div class="grid">
+        {% for c in classes %}
+            <div class="card">
+                <a href="/class/{{ c['id'] }}" class="class-link">
+                    <h3>{{ c['subject'] }}</h3>
+                    <p style="color:#888; margin:0;">View classroom</p>
+                </a>
+            </div>
+        {% else %}
+            <div style="grid-column:1/-1; text-align:center; color:#777;">No assigned classes.</div>
+        {% endfor %}
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <h2>Questions in My Classes</h2>
+        <table>
+            <tr>
+                <th>Class</th>
+                <th>Question</th>
+                <th>Votes</th>
+            </tr>
+            {% for q in questions %}
+            <tr>
+                <td>{{ q['class_subject'] }}</td>
+                <td>{{ q['text'] }}</td>
+                <td>{{ q['votes'] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="3" style="text-align:center; color:#777;">No questions yet.</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
