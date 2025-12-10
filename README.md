@@ -67,5 +67,4 @@ The system can be **expanded to include additional features** like notifications
 
 - **Improved classroom interaction** – organized dashboards for all roles
 
-- **Hands-on learning platform** – provides students and developers experience with **full-stack web development**
 
